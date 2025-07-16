@@ -25,10 +25,10 @@ class Pooling():
             )
             self.client.append(client)
 
-    def call_llm_core(self, prompt, **kwargs):
+    def call_llm_core(self, prompt, instruction = "Your are an AI assistant.",**kwargs):
         response = self.client[self.idx].chat.completions.create(
             model=os.getenv('MODEL_NAME'),
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role":"system", "content": instruction}, {"role": "user", "content": prompt}],
             temperature=0.7
         )
 
@@ -62,10 +62,10 @@ class Pooling():
 
         return full_content
 
-    def pivot(self, func, prompt, attempt=0, **kwargs):
+    def pivot(self, func, prompt, instruction, attempt=0, **kwargs):
         attempt = attempt
         try:
-            return func(prompt, **kwargs)
+            return func(prompt, instruction = instruction, **kwargs)
         except OpenAIError as e:
             attempt += 1
             if (attempt == self.list_len):
@@ -73,11 +73,11 @@ class Pooling():
             print(f"Call API key {self.idx} fails. Error：{e}")
             print(("Call the next API key"))
             self.idx = (self.idx + 1) % self.list_len
-            return self.pivot(func, prompt, attempt, **kwargs)
+            return self.pivot(func, prompt, instruction = instruction, attempt=attempt, **kwargs)
 
-    def call_llm(self, prompt, stream=True, stream_callback=None):
+    def call_llm(self, prompt, instruction = "You are an AI assistant.", stream=True, stream_callback=None):
         if stream:
-            return self.pivot(func=self.call_llm_stream_core, prompt=prompt, stream_callback=stream_callback)
+            return self.pivot(func=self.call_llm_stream_core, prompt=prompt, instruction = instruction, stream_callback=stream_callback)
         return self.pivot(func=self.call_llm_core, prompt=prompt)
 
 if __name__ == "__main__":

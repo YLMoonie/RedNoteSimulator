@@ -6,7 +6,6 @@ import os
 
 load_dotenv()
 
-#定义llm调用函数，复制粘贴就行
 base_url = os.getenv("BASE_URL", "")
 api_keys_string = os.getenv("API_LIST", [])
 api_list = [key.strip() for key in api_keys_string.split(',') if key.strip()]
