@@ -232,6 +232,7 @@ Prep:post_info_output,PsychologicalBuyInfo_output,poster_identity_output,post_ti
      is_interact_output,is_buy_output,browse_psychology_infomation_output,interact_psychology_information_output
 Post:user_decision_report_create_output
 '''
+
 class UserDecisionReportCreate(Node):
     def prep(self,shared):
         return shared.get("post_info_output",""),shared.get("poster_identity_output",""),shared.get("post_title_output",""),shared.get("post_classification_output",""),shared.get("post_content_output",""),shared.get("like_num_output",""),shared.get("cmt_num_output",""),shared.get("fwd_num_output",""),shared.get("is_browse_output",""),shared.get("is_interact_output",""),shared.get("is_buy_output",""),shared.get("browse_psychology_infomation_output",""),shared.get("interact_psychology_information","")
@@ -244,9 +245,8 @@ class UserDecisionReportCreate(Node):
         帖子中交互产生的心理信息：{interact_psychology_information}
         '''
         prompt=""
-        response = call_llm(prompt=formatted_prompt, instruction=instruction)
+        response = call_llm(prompt=prompt, instruction=instruction)
         return response
 
     def post(self, shared, prep_res, exec_res):
         shared['user_decision_report_create_output'] = exec_res
-    
