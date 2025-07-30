@@ -88,6 +88,26 @@ class RECOMMEND_DisturbanceCreate(Node):
     def post(self,shared,prep_res,exec_res):
         shared['RECOMMEND_disturbance_create_output']=exec_res
 
+
+'''
+[RECOMMEND] Content Generate
+Function: create content of 10 posts
+Prep: user_information_create1_output,buy_item_output, USER_search_word_create_output,
+Post: RECOMMEND_content_generate_output
+'''
+
+class RECOMMEND_ContentGenerate(Node):
+    def prep(self, shared):
+        return shared.get("user_information_create1_output",""),shared.get("buy_item_output",""),shared.get("USER_search_word_create_output","")
+    def exec(self, prep_res):
+        user_information_create1, buy_item, USER_search_word_create=prep_res
+        instruction='你是小红书的推荐系统，能够决定向用户推送的内容'
+        prompt=f'现在有一个用户，他的信息如下：{user_information_create1}你检测到他想买{buy_item}并且正在搜索{USER_search_word_create}。请你根据他的搜索返回10条帖子内容。注意：你只需要返回大致的帖子信息，而不需要完整的帖子内容输出格式：###帖子1信息...###帖子2信息......###帖子10信息...'
+        response=call_llm(prompt = prompt, instruction = instruction)
+        return response
+    def post(self,shared,prep_res,exec_res):
+        shared['RECOMMEND_content_generate_output']=exec_res
+
 '''
 User Feature Create
 Function: create key word 
@@ -111,7 +131,7 @@ class UserFeatureCreate(Node):
 '''
 [RECOMMEND] Content Decide 1
 Function: decide the content recommended to users
-Prep:user_information_create1_output,willing_output,USER_search_word_create_output
+Prep:user_information_create1_output,willing_output,USER_search_word_create_output, 
 Post:RECOMMEND_content_decide1_output
 '''
 class RECOMMEND_ContentDecide1(Node):
@@ -169,7 +189,7 @@ class RECOMMEND_ContentDecide1(Node):
 [RECOMMEND] Content Decide 2
 Function: decide the content recommended to users
 Prep:user_information_create2_output,willing1_output
-Post:RECOMMEND_content_decide1_output
+Post:RECOMMEND_content_decide2_output
 '''
 class RECOMMEND_ContentDecide2(Node):
     def prep(self,shared):
@@ -222,7 +242,7 @@ class RECOMMEND_ContentDecide2(Node):
 
         return response
     def post(self,shared,prep_res,exec_res):
-        shared['RECOMMEND_content_decide1_output'] = exec_res
+        shared['RECOMMEND_content_decide2_output'] = exec_res
 
 '''
 User Decision Report Create
@@ -250,3 +270,4 @@ class UserDecisionReportCreate(Node):
 
     def post(self, shared, prep_res, exec_res):
         shared['user_decision_report_create_output'] = exec_res
+
