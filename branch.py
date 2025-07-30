@@ -6,7 +6,7 @@ Exec: Executes the decision logic and returns "CASE_1" or "CASE_2".
 Post: No operation is performed, as the decision result is used directly by the Flow controller.
 '''
 
-class Purchase_Decision_Judgment(Node):
+class PurchaseDecisionJudgment(Node):
     def prep(self, shared):
         return shared.get('buy_is_positive', '')
 
@@ -25,7 +25,7 @@ Exec: "CASE_1","CASE_2"
 Post:No operation is performed, as the decision result is used directly by the Flow controller.
 '''        
         
-class User_Browse_Judgment(Node):
+class UserBrowseJudgment(Node):
     def prep(self,shared):
         return shared.get('user_browse_check_output','')
     def exec(self,prep_res):
@@ -41,7 +41,7 @@ Function: Based on the users' interaction behavior, it returns a string that rep
 Post: user_interaction_judge_output
 Exec:"CASE_1","CASE_2"
 '''
-class Interaction_Judgment(Node):
+class InteractionJudgment(Node):
     def prep(self,shared):
         return shared.get('user_interaction_judge_output','')
     def exec(self,prep_res):
@@ -58,7 +58,7 @@ Post:user_interaction_judge_output
 Exec:"CASE_1","CASE_2"
 '''
 
-class Interaction_Object_Judgment(Node):
+class InteractionObjectJudgment(Node):
     def prep(self,shared):
         return shared.get('user_interaction_judge_output','')
     def exec(self,prep_res):
@@ -75,7 +75,7 @@ Loop Controller:
 Prep: 'try_number'
 Exec: "CONTINUE_LOOP" , "EXIT_LOOP"
     """
-class Loop_Controller(Node):
+class LoopController(Node):
     def prep(self, shared):
         shared.setdefault('try_number', 0)
     def exec(self, prep_res):
