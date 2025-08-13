@@ -40,7 +40,7 @@ shared['broswer_time_output'] = extract_with_regex(input_text, '4')
 shared['buy_item_output'] = extract_with_regex(input_text, '5')
 shared['willing_output'] = extract_with_regex(input_text, '6')
 """
-execution_results = CodeExcute(code_parameter_extractor1,'shared')
+
 
 
 '''
@@ -77,7 +77,7 @@ shared['broswer_time_output'] = extract_with_regex(input_text, '4')
 shared['buy_item_output'] = extract_with_regex(input_text, '5')
 shared['willing1_output'] = extract_with_regex(input_text, '6')
 """
-execution_results = CodeExcute(code_parameter_extractor2,'shared')
+
 
 
 '''
@@ -90,16 +90,16 @@ cmt_num_output,fwd_num_output
 code_post_info = """
 import re
 
-input_text = branch_to_aggregation_output
+input_text = shared['content_recommendation_output']
 
 SECTION_MAP = {
     '帖主身份': 'poster_identity_output',
     '帖子标题': 'post_title_output',
     '帖子性质': 'post_classification_output',
     '帖子内容': 'post_content_output',
-    '点赞数': ' like_num_output',
+    '点赞数': 'like_num_output',
     '评论数': 'cmt_num_output',
-    '转发数':'fwd_num_output'
+    '转发量':'fwd_num_output'
 }
 
 
@@ -123,7 +123,7 @@ for chinese_name, english_key in SECTION_MAP.items():
     shared[english_key] = item_list
 """
 
-execution_results = CodeExcute(code_post_info,'shared')
+
 
 
 

@@ -19,13 +19,13 @@ call_llm = pooling_example.call_llm
 '''
 [USER] BrowseCheck
 Function: Decide whether to browse the pushed post based on visibility
-Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, like_num_output, cmt_num_output, fwd_num_output
+Prep: buy_is_positive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, like_num_output, cmt_num_output, fwd_num_output
 Post: USER_browse_check_output
 '''
 class USER_BrowseCheck(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
@@ -75,7 +75,7 @@ Post: USER_psychological_info_create_output
 class USER_PsychologicalInfoCreate(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
@@ -125,7 +125,7 @@ Post: USER_interaction_judge_output
 class USER_InteractionJudge(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
@@ -134,9 +134,8 @@ class USER_InteractionJudge(Node):
         )
 
     def exec(self, prep_res):
-        (buy_ispositive, output, poster_identity, post_title, 
-         post_classification, post_content, like_num, cmt_num, 
-         fwd_num, psychological_info) = prep_res
+        (buy_ispositive, output,  post_title, 
+         post_classification, post_content, psychological_info) = prep_res
         
         instruction = ""
         if int(buy_ispositive) == 1:
@@ -165,12 +164,12 @@ class USER_InteractionJudge(Node):
 [USER] InteractionInfoCreate
 Function: Generate user's comment content for the post
 Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_psychological_info_create_output
-Post: USER_interaction_info_create_output
+Post: USER_interaction_info_create1_output
 '''
-class USER_InteractionInfoCreate(Node):
+class USER_InteractionInfoCreate1(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
@@ -202,7 +201,7 @@ class USER_InteractionInfoCreate(Node):
         return response.strip()
 
     def post(self, shared, prep_res, exec_res):
-        shared['USER_interaction_info_create_output'] = exec_res
+        shared['USER_interaction_info_create1_output'] = exec_res
 
 
 
@@ -219,7 +218,7 @@ class POSTER_InteractionFeedbackCreate(Node):
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
-            shared.get("USER_interaction_info_create_output", "")
+            shared.get("USER_interaction_info_create1_output", "")
         )
 
     def exec(self, prep_res):
@@ -245,20 +244,20 @@ class POSTER_InteractionFeedbackCreate(Node):
 '''
 [USER] PsychologicalInfoCreate1
 Function: Generate user's psychological response after interaction with poster
-Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, POSTER_interaction_feedback_create_output, USER_interaction_info_create_output, USER_psychological_info_create_output
+Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, POSTER_interaction_feedback_create_output, USER_interaction_info_create1_output, USER_psychological_info_create_output
 Post: USER_psychological_info_create1_output
 '''
 class USER_PsychologicalInfoCreate1(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
             shared.get("POSTER_interaction_feedback_create_output", ""),
-            shared.get("USER_interaction_info_create_output", ""),
+            shared.get("USER_interaction_info_create1_output", ""),
             shared.get("USER_psychological_info_create_output", "")
         )
 
@@ -329,19 +328,19 @@ class USER_CommentCreate(Node):
 '''
 [USER] CommentToInteractSelect
 Function: Select a comment to interact with from post comments
-Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create_output, USER_comment_create_output, USER_psychological_info_create_output
+Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create1_output, USER_comment_create_output, USER_psychological_info_create_output
 Post: USER_comment_to_interact_select_output
 '''
 class USER_CommentToInteractSelect(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
-            shared.get("USER_interaction_info_create_output", ""),
+            shared.get("USER_interaction_info_create1_output", ""),
             shared.get("USER_comment_create_output", ""),
             shared.get("USER_psychological_info_create_output", "")
         )
@@ -377,21 +376,21 @@ class USER_CommentToInteractSelect(Node):
 
 
 '''
-[USER] InteractionInfoCreate
+[USER] InteractionInfoCreate2
 Function: Generate reply to selected comment
-Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create_output, USER_comment_create_output, USER_comment_to_interact_select_output, USER_psychological_info_create_output
-Post: USER_interaction_info_create_output
+Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create1_output, USER_comment_create_output, USER_comment_to_interact_select_output, USER_psychological_info_create_output
+Post: USER_interaction_info_create2_output
 '''
-class USER_InteractionInfoCreate(Node):
+class USER_InteractionInfoCreate2(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
-            shared.get("USER_interaction_info_create_output", ""),
+            shared.get("USER_interaction_info_create1_output", ""),
             shared.get("USER_comment_create_output", ""),
             shared.get("USER_comment_to_interact_select_output", ""),
             shared.get("USER_psychological_info_create_output", "")
@@ -423,14 +422,14 @@ class USER_InteractionInfoCreate(Node):
         return response.strip()
 
     def post(self, shared, prep_res, exec_res):
-        shared['USER_interaction_info_create_output'] = exec_res
+        shared['USER_interaction_info_create2_output'] = exec_res
 
 
 
 '''
 [OTHERUSER] InteractionFeedbackCreate
 Function: Generate response to user's reply on comment
-Prep: poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create_output, USER_comment_to_interact_select_output
+Prep: poster_identity_output, post_title_output, post_classification_output, post_content_output, USER_interaction_info_create2_output, USER_comment_to_interact_select_output
 Post: OTHERUSER_interaction_feedback_create_output
 '''
 class OTHERUSER_InteractionFeedbackCreate(Node):
@@ -440,7 +439,7 @@ class OTHERUSER_InteractionFeedbackCreate(Node):
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
-            shared.get("USER_interaction_info_create_output", ""),
+            shared.get("USER_interaction_info_create2_output", ""),
             shared.get("USER_comment_to_interact_select_output", "")
         )
 
@@ -469,20 +468,20 @@ class OTHERUSER_InteractionFeedbackCreate(Node):
 '''
 [USER] PsychologicalInfoCreate2
 Function: Generate user's psychological response after comment interaction
-Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, poster_interaction_feedback_create_output, user_interaction_info_create_output, user_comment_create_output, user_comment_to_interact_select_output, OTHERUSER_interaction_feedback_create_output, user_psychological_info_create_output
+Prep: buy_ispositive_output, output_output, poster_identity_output, post_title_output, post_classification_output, post_content_output, poster_interaction_feedback_create_output, user_interaction_info_create2_output, user_comment_create_output, user_comment_to_interact_select_output, OTHERUSER_interaction_feedback_create_output, user_psychological_info_create_output
 Post: USER_psychological_info_create2_output
 '''
 class USER_PsychologicalInfoCreate2(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("poster_identity_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
             shared.get("POSTER_interaction_feedback_create_output", ""),
-            shared.get("USER_interaction_info_create_output", ""),
+            shared.get("USER_interaction_info_create2_output", ""),
             shared.get("USER_comment_create_output", ""),
             shared.get("USER_comment_to_interact_select_output", ""),
             shared.get("OTHERUSER_interaction_feedback_create_output", ""),
@@ -526,13 +525,13 @@ class USER_PsychologicalInfoCreate2(Node):
 '''
 [USER] PurchaseDecide1
 Function: Decide whether to purchase after viewing post
-Prep: buy_ispositive_output, output_output, post_title_output, post_classification_output, post_content_output, user_psychological_info_create_output
+Prep: buy_ispositive_output, output_output, post_title_output, post_classification_output, post_content_output, user_psychological_info_create2_output
 Post: USER_purchase_decide1_output
 '''
 class USER_PurchaseDecide1(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
@@ -577,20 +576,22 @@ Post: USER_purchase_decide2_output
 class USER_PurchaseDecide2(Node):
     def prep(self, shared):
         return (
-            shared.get("buy_ispositive_output", ""),
+            shared.get("buy_is_positive_output", ""),
             shared.get("output_output", ""),
             shared.get("post_title_output", ""),
             shared.get("post_classification_output", ""),
             shared.get("post_content_output", ""),
             shared.get("USER_psychological_info_create_output", ""),
+            shared.get("USER_psychological_info_create1_output", ""),
             shared.get("USER_psychological_info_create2_output", "")
         )
 
     def exec(self, prep_res):
         (buy_ispositive, output, post_title,
          post_classification, post_content,
-         initial_psychological, interaction_psychological) = prep_res
-        
+         initial_psychological, interaction_psychological1,interaction_psychological2) = prep_res
+        interaction_psychological = interaction_psychological1 or interaction_psychological2
+
         instruction = ""
         if int(buy_ispositive) == 1:
             instruction = f"你有点想买{output}，并且在小红书上搜索它"

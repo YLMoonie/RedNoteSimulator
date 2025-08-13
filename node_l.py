@@ -30,7 +30,7 @@ class UserInformationCreate1(Node):
         return response
     def post(self, shared, prep_res, exec_res):
         shared['user_information_create1_output'] = exec_res
-
+        
 '''
 User Information Create 2
 Function: Simulate user information(hobby\ identity\searching record\item searched)
@@ -47,18 +47,19 @@ class UserInformationCreate2(Node):
         return response
     def post(self, shared, prep_res, exec_res):
         shared['user_information_create2_output'] = exec_res
+        
 
 '''
 [USER] Search Word Create 
 Function: create the searching word of a specific item
-Prep:user_prompt_output, buy_item_output
+Prep:user_prompt_output, willing_output
 Post: USER_search_word_create_output
 
 '''
 
 class USER_SearchWordCreate(Node):
     def prep(self, shared):
-        return shared.get("user_prompt_output",""),shared.get("buy_item_output", "")
+        return shared.get("user_prompt_output",""),shared.get("willing_output", "")
     def exec(self,prep_res):
         user_prompt, buy_item = prep_res
         instruction = user_prompt
@@ -185,6 +186,7 @@ class RECOMMEND_ContentDecide1(Node):
         return response
     def post(self,shared,prep_res,exec_res):
         shared['RECOMMEND_content_decide1_output'] = exec_res
+        shared['content_recommendation_output']=exec_res
 '''
 [RECOMMEND] Content Decide 2
 Function: decide the content recommended to users
@@ -193,7 +195,7 @@ Post:RECOMMEND_content_decide2_output
 '''
 class RECOMMEND_ContentDecide2(Node):
     def prep(self,shared):
-        return shared.get('user_information_create2_output',''),shared.get('willing_output','')
+        return shared.get('user_information_create2_output',''),shared.get('willing1_output','')
     def exec(self, prep_res):
         user_information, willing=prep_res
         instruction='你是小红书的推荐系统，能够决定向用户推送的内容.'
@@ -243,6 +245,7 @@ class RECOMMEND_ContentDecide2(Node):
         return response
     def post(self,shared,prep_res,exec_res):
         shared['RECOMMEND_content_decide2_output'] = exec_res
+        shared['content_recommendation_output']=exec_res
 
 '''
 User Decision Report Create
@@ -255,7 +258,7 @@ Post:user_decision_report_create_output
 
 class UserDecisionReportCreate(Node):
     def prep(self,shared):
-        return shared.get("post_info_output",""),shared.get("poster_identity_output",""),shared.get("post_title_output",""),shared.get("post_classification_output",""),shared.get("post_content_output",""),shared.get("like_num_output",""),shared.get("cmt_num_output",""),shared.get("fwd_num_output",""),shared.get("is_browse_output",""),shared.get("is_interact_output",""),shared.get("is_buy_output",""),shared.get("browse_psychology_infomation_output",""),shared.get("interact_psychology_information","")
+        return shared.get("post_info_output",""),shared.get("poster_identity_output",""),shared.get("post_title_output",""),shared.get("post_classification_output",""),shared.get("post_content_output",""),shared.get("like_num_output",""),shared.get("cmt_num_output",""),shared.get("fwd_num_output",""),shared.get("USER_browse_check_output", ""),shared.get("USER_interaction_judge_output", ""),shared.get("USER_purchase_decide2_output",""),shared.get("USER_psychological_info_create_output",""),shared.get("USER_psychological_info_create2_output","")
 
     def exec(self, prep_res):
         post_info,poster_identity,post_title,post_classification,post_content,like_num,cmt_num,fwd_num,is_browse,is_interact,is_buy,browse_psychology_infomation,interact_psychology_information =prep_res

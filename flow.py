@@ -7,6 +7,10 @@ import os
 import re
 import warnings
 
+from branch import PurchaseDecisionJudgment,UserBrowseJudgment,InteractionJudgment,InteractionObjectJudgment,LoopController
+from node_l import UserInformationCreate1,UserInformationCreate2,USER_SearchWordCreate,RECOMMEND_DisturbanceCreate,UserFeatureCreate,RECOMMEND_ContentGenerate,RECOMMEND_ContentDecide1,RECOMMEND_ContentDecide2,UserDecisionReportCreate
+from node_s import USER_BrowseCheck,USER_PsychologicalInfoCreate,USER_InteractionJudge,USER_InteractionInfoCreate1,USER_InteractionInfoCreate2,POSTER_InteractionFeedbackCreate,USER_PsychologicalInfoCreate1,USER_CommentCreate,USER_CommentToInteractSelect,OTHERUSER_InteractionFeedbackCreate,USER_PsychologicalInfoCreate2,USER_PurchaseDecide1,USER_PurchaseDecide2
+from code import code_parameter_extractor1, code_parameter_extractor2, code_post_info
 load_dotenv()
 
 #定义llm调用函数，复制粘贴就行
@@ -32,17 +36,17 @@ user_decision_report_create=UserDecisionReportCreate()
 USER_browse_check=USER_BrowseCheck()
 USER_psychological_info_create=USER_PsychologicalInfoCreate()
 USER_interaction_judge=USER_InteractionJudge()
-USER_interaction_info_create=USER_InteractionInfoCreate()
+USER_interaction_info_create1=USER_InteractionInfoCreate1()
 POSTER_interaction_feedback_create=POSTER_InteractionFeedbackCreate()
 USER_psychological_info_create1=USER_PsychologicalInfoCreate1()
+USER_interaction_info_create2=USER_InteractionInfoCreate2()
 USER_comment_create=USER_CommentCreate()
 USER_comment_to_interact_select=USER_CommentToInteractSelect()
-USER_interaction_info_create=USER_InteractionInfoCreate()
 OTHERUSER_interaction_feedback_create=OTHERUSER_InteractionFeedbackCreate()
 USER_psychological_info_create2=USER_PsychologicalInfoCreate2()
 USER_purchase_decide1=USER_PurchaseDecide1()
 USER_purchase_decide2=USER_PurchaseDecide2()
-user_browse_judgment=User_Browse_Judgment()
+user_browse_judgment=UserBrowseJudgment()
 interaction_judgment=InteractionJudgment()
 interaction_object_judgment=InteractionObjectJudgment()
 loop_controller=LoopController()
@@ -94,13 +98,13 @@ user_browse_judgment - "CASE_1" >> loop_controller
 (user_browse_judgment - "CASE_2" >> USER_psychological_info_create >> USER_interaction_judge >> interaction_judgment)
 (interaction_judgment - "CASE_2" >> USER_purchase_decide1 >> loop_controller)
 (interaction_judgment - "CASE_1" >> interaction_object_judgment)
-(interaction_object_judgment - "CASE_1" >> USER_interaction_info_create >> POSTER_interaction_feedback_create >> USER_psychological_info_create1 >> USER_purchase_decide2 >> loop_controller)
-(interaction_object_judgment - "CASE_2" >> USER_comment_create >> USER_comment_to_interact_select >> USER_interaction_info_create >> OTHERUSER_interaction_feedback_create >> USER_psychological_info_create2 >> USER_purchase_decide2 >> loop_controller)
+(interaction_object_judgment - "CASE_1" >> USER_interaction_info_create1 >> POSTER_interaction_feedback_create >> USER_psychological_info_create1 >> USER_purchase_decide2 >> loop_controller)
+(interaction_object_judgment - "CASE_2" >> USER_comment_create >> USER_comment_to_interact_select >> USER_interaction_info_create2 >> OTHERUSER_interaction_feedback_create >> USER_psychological_info_create2 >> USER_purchase_decide2 >> loop_controller)
 
 flow = Flow()
 flow.start(purchase_decision_judgment)
 purchase_decision_judgment_output=str(input())
-shared = {'purchase_decision_judgment_output': purchase_decision_judgment_output}
+shared = {'buy_is_positive_output': purchase_decision_judgment_output}
 flow.run(shared)  
 
 
