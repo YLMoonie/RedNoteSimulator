@@ -247,30 +247,5 @@ class RECOMMEND_ContentDecide2(Node):
         shared['RECOMMEND_content_decide2_output'] = exec_res
         shared['content_recommendation_output']=exec_res
 
-'''
-User Decision Report Create
-Function:create a analysis report about user's purchasing decision
-Prep:post_info_output,PsychologicalBuyInfo_output,poster_identity_output,post_title_output
-     post_classification_output,post_content_output,like_num_output,cmt_num_output,fwd_num_output,is_browse_output
-     is_interact_output,is_buy_output,browse_psychology_infomation_output,interact_psychology_information_output
-Post:user_decision_report_create_output
-'''
 
-class UserDecisionReportCreate(Node):
-    def prep(self,shared):
-        return shared.get("post_info_output",""),shared.get("poster_identity_output",""),shared.get("post_title_output",""),shared.get("post_classification_output",""),shared.get("post_content_output",""),shared.get("like_num_output",""),shared.get("cmt_num_output",""),shared.get("fwd_num_output",""),shared.get("USER_browse_check_output", ""),shared.get("USER_interaction_judge_output", ""),shared.get("USER_purchase_decide2_output",""),shared.get("USER_psychological_info_create_output",""),shared.get("USER_psychological_info_create2_output","")
-
-    def exec(self, prep_res):
-        post_info,poster_identity,post_title,post_classification,post_content,like_num,cmt_num,fwd_num,is_browse,is_interact,is_buy,browse_psychology_infomation,interact_psychology_information =prep_res
-        instruction=f'''用户在浏览小红书时浏览了这些帖子{post_info},根据帖子做了些是否购买该产品的决策，具体内容如下。基于以下内容生成一份用户决策报告。
-        {post_info},{poster_identity},{post_title},{post_classification},{post_content},{like_num},{cmt_num},{fwd_num},
-        是否浏览：{is_browse}\n 是否交互：{is_interact}\n 是否购买：{is_buy}\n浏览时的心理信息：{browse_psychology_infomation}\n
-        帖子中交互产生的心理信息：{interact_psychology_information}
-        '''
-        prompt=""
-        response = call_llm(prompt=prompt, instruction=instruction)
-        return response
-
-    def post(self, shared, prep_res, exec_res):
-        shared['user_decision_report_create_output'] = exec_res
 
