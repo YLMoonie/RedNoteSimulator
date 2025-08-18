@@ -8,7 +8,7 @@ import re
 import warnings
 
 from branch import PurchaseDecisionJudgment,UserBrowseJudgment,InteractionJudgment,InteractionObjectJudgment,LoopController
-from node_l import UserInformationCreate1,UserInformationCreate2,USER_SearchWordCreate,RECOMMEND_DisturbanceCreate,UserFeatureCreate,RECOMMEND_ContentGenerate,RECOMMEND_ContentDecide1,RECOMMEND_ContentDecide2,UserDecisionReportCreate
+from node_l import UserInformationCreate1,UserInformationCreate2,USER_SearchWordCreate,RECOMMEND_DisturbanceCreate,UserFeatureCreate,RECOMMEND_ContentGenerate,RECOMMEND_ContentDecide1,RECOMMEND_ContentDecide2
 from node_s import USER_BrowseCheck,USER_PsychologicalInfoCreate,USER_InteractionJudge,USER_InteractionInfoCreate1,USER_InteractionInfoCreate2,POSTER_InteractionFeedbackCreate,USER_PsychologicalInfoCreate1,USER_CommentCreate,USER_CommentToInteractSelect,OTHERUSER_InteractionFeedbackCreate,USER_PsychologicalInfoCreate2,USER_PurchaseDecide1,USER_PurchaseDecide2
 from code import code_parameter_extractor1, code_parameter_extractor2, code_post_info
 load_dotenv()
@@ -37,7 +37,6 @@ class UserDecisionReportCreate(Node):
 
     def post(self, shared, prep_res, exec_res):
         shared['user_decision_report_create_output'] = exec_res
-
 
 
 class ParameterExtractor(Node):
@@ -89,8 +88,6 @@ user_browse_judgment=UserBrowseJudgment()
 interaction_judgment=InteractionJudgment()
 interaction_object_judgment=InteractionObjectJudgment()
 loop_controller=LoopController()
-
-
 user_decision_report_create=UserDecisionReportCreate()
 
 (purchase_decision_judgment - "CASE_1" >> user_information_create1
@@ -122,10 +119,8 @@ user_browse_judgment - "CASE_1" >> loop_controller
 (interaction_object_judgment - "CASE_1" >> USER_interaction_info_create1 >> POSTER_interaction_feedback_create >> USER_psychological_info_create1 >> USER_purchase_decide2 >> loop_controller)
 (interaction_object_judgment - "CASE_2" >> USER_comment_create >> USER_comment_to_interact_select >> USER_interaction_info_create2 >> OTHERUSER_interaction_feedback_create >> USER_psychological_info_create2 >> USER_purchase_decide2 >> loop_controller)
 
+purchase_decision_judgment_output = str(input("程序已准备就绪，请输入用户初始购买意愿 (1 表示想买, 0 表示随便看看): "))
+shared = {'buy_is_positive_output': purchase_decision_judgment_output}
 flow = Flow()
 flow.start(purchase_decision_judgment)
-purchase_decision_judgment_output=str(input())
-shared = {'buy_is_positive_output': purchase_decision_judgment_output}
-flow.run(shared)  
-
-
+flow.run(shared)
