@@ -1,4 +1,4 @@
-from pocketflow import Node, Flow
+from pocketflow import Node
 from rns_utils.llm import Pooling
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ call_llm = pooling_example.call_llm
 
 '''
 Purchase Decision Judgment:
-Function:Based on the value of the 'buyIsPositive' variable in the shared state, it returns a string that represents the branch to take.
+Function:Based on the value of the 'buy_Is_positive_output' variable in the shared state, it returns a string that represents the branch to take.
 Prep: Prepares the necessary variable for the decision from the shared state.
 Exec: Executes the decision logic and returns "CASE_1" or "CASE_2".
 Post: No operation is performed, as the decision result is used directly by the Flow controller.

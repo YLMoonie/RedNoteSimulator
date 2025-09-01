@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-#API_LIST = os.getenv('API_LIST','')
-
 class Pooling():
     def __init__(self, API_LIST, BASE_URL):
         self.api = API_LIST
@@ -31,15 +29,13 @@ class Pooling():
             messages=[{"role":"system", "content": instruction}, {"role": "user", "content": prompt}],
             temperature=0.7
         )
-
         self.idx = (self.idx + 1) % self.list_len
-
         return response.choices[0].message.content
 
-    def call_llm_stream_core(self, prompt, stream_callback=None, **kwargs):
+    def call_llm_stream_core(self, prompt, instruction="You are an AI assistant.", stream_callback=None, **kwargs):
         response = self.client[self.idx].chat.completions.create(
             model=os.getenv('MODEL_NAME'),
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role":"system", "content": instruction},{"role": "user", "content": prompt}],
             temperature=0.7,
             stream=True
         )
@@ -53,19 +49,22 @@ class Pooling():
                 chunk_content = delta.content
                 if stream_callback:
                     stream_callback(chunk_content)
-                else:
-                    print(chunk_content, end="", flush=True)
+                # vvvv 【重要修正】移除此处的 print 语句 vvvv
+                # else:
+                #     print(chunk_content, end="", flush=True)
                 full_content += chunk_content
-
-        if not stream_callback:
-            print()
+        
+        # vvvv 【重要修正】移除此处的 print 语句 vvvv
+        # if not stream_callback:
+        #     print()
 
         return full_content
 
-    def pivot(self, func, prompt, instruction, attempt=0, **kwargs):
+    def pivot(self, func, prompt, instruction = "You are an AI assistant.", attempt=0, **kwargs):
         attempt = attempt
         try:
-            return func(prompt, instruction = instruction, **kwargs)
+            # vvvv 【重要修正】确保 instruction 参数被正确传递 vvvv
+            return func(prompt, instruction=instruction, **kwargs)
         except OpenAIError as e:
             attempt += 1
             if (attempt == self.list_len):
@@ -77,13 +76,13 @@ class Pooling():
 
     def call_llm(self, prompt, instruction = "You are an AI assistant.", stream=True, stream_callback=None):
         if stream:
-            return self.pivot(func=self.call_llm_stream_core, prompt=prompt, instruction = instruction, stream_callback=stream_callback)
-        return self.pivot(func=self.call_llm_core, prompt=prompt)
+            return self.pivot(func=self.call_llm_stream_core, prompt=prompt, instruction=instruction, stream_callback=stream_callback)
+        return self.pivot(func=self.call_llm_core, prompt=prompt, instruction=instruction)
 
 if __name__ == "__main__":
     base_url = os.getenv("BASE_URL", "")
     api_keys_string = os.getenv("API_LIST", [])
     api_list = [key.strip() for key in api_keys_string.split(',') if key.strip()]
     pooling = Pooling(API_LIST=api_list, BASE_URL=base_url)
-
-    pooling.call_llm("Use 50 words to describe Genshin Impact")
+    # 测试时，我们希望看到输出，所以显式地使用 print
+    print(pooling.call_llm("Use 50 words to describe Genshin Impact", stream=False))

@@ -90,7 +90,9 @@ cmt_num_output,fwd_num_output
 code_post_info = """
 import re
 
-input_text = shared['content_recommendation_output']
+# 使用 repr() 来安全地处理可能包含特殊字符的输入
+# 这可以防止 'unterminated string literal' 之类的错误
+input_text = shared.get('content_recommendation_output', '')
 
 SECTION_MAP = {
     '帖主身份': 'poster_identity_output',
@@ -113,13 +115,17 @@ def extract_section(text, section_marker):
 def parse_section_to_list(section_text):
     if not section_text:
         return []
-    items = re.findall(r'{(.*?)}', section_text, re.DOTALL)
+    
+    # vvvv 【重要修正】使用更宽容的正则表达式 \\s* 匹配换行符或空格 vvvv
+    items = re.findall(r'###第\\d+个.*?的.*?\\s*(.*?)(?=\\n###|$)', section_text, re.DOTALL)
+    
     return [item.strip() for item in items]
 
 for chinese_name, english_key in SECTION_MAP.items():
     full_marker = f'%%%{chinese_name}'
     section_content = extract_section(input_text, full_marker)
     item_list = parse_section_to_list(section_content)
+
     shared[english_key] = item_list
 """
 

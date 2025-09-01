@@ -30,16 +30,17 @@ class CodeExecute(Node):
         local_scope={}
         exec(self.code, {}, local_scope)
         results = [local_scope[var] for var in self.outputs]
-        return results;
+        return results
 
     def post(self,shared,prep_res,exec_res):
         for i,j in zip(self.outputs, exec_res):
             shared[i] = j
 
-code = "a,b = 3,4 \nc, d = a+b, a-b"       #There should be no blank after '\n', or you will get a Traceback!
-flow = Flow()
-a=CodeExecute(code, 'c', 'd')
-flow.start(a)
-shared={}
-flow.run(shared)
-print(shared)
+if __name__=="__main__":
+    code = "a,b = 3,4 \nc, d = a+b, a-b"       #There should be no blank after '\n', or you will get a Traceback!
+    flow = Flow()
+    a=CodeExecute(code, 'c', 'd')
+    flow.start(a)
+    shared={}
+    flow.run(shared)
+    print(shared)
