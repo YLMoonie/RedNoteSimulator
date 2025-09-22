@@ -21,8 +21,8 @@ Post: No operation is performed, as the decision result is used directly by the 
 '''
 
 class PurchaseDecisionJudgment(Node):
-    def prep(self, shared):
-        return shared.get('buy_is_positive_output', '')
+    def prep(self, shared):  
+        return shared.get('buy_is_positive_output', '')                                                                            
 
     def exec(self, prep_res):
         buy_is_positive = prep_res
