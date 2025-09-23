@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedNote 用户决策模拟器</title>
+    <link rel="stylesheet" href="/frontend/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RedNote 用户决策模拟器</h1>
+        </header>
+        
+        <main>
+            <div id="controls">
+                <label for="buy-intention">用户初始购买意愿:</label>
+                <select id="buy-intention">
+                    <option value="1">明确想买</option>
+                    <option value="0">随便看看</option>
+                </select>
+                <button id="start-button">开始模拟</button>
+            </div>
+
+            <div class="page-layout">
+                
+                <div class="main-content">
+                    <div id="results-container">
+                        </div>
+                    
+                    <div id="final-actions" class="hidden">
+                        <button id="download-full-report">下载完整报告 (JSON)</button>
+                        <button id="download-zip-report">下载节点压缩包 (ZIP)</button>
+                        <button id="download-env-config">下载环境配置 (JSON)</button> </div>
+                    </div>
+
+                <aside class="sidebar">
+                    <div id="progress-container"> 
+                        <h2>模拟路径</h2>
+                        <h3 id="progress-percentage">0%</h3>
+                        <div class="timeline-container">
+                            <div id="timeline-progress-bar"></div>
+                            <ul id="timeline-nodes">
+                                </ul>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-title">节点详情</h3>
+            <pre id="modal-body"></pre>
+        </div>
+    </div>
+
+    <script src="/frontend/script.js"></script>
+</body>
+</html>
