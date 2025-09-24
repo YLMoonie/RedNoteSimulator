@@ -78,7 +78,7 @@ RedNoteSimulator/
 ### 2. 启动后端服务
 ```bash
 cd backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python main.py
 ```
 - `/`：返回前端页面。
 - `/run-simulation/?buy_intention=1`：触发 PocketFlow 流程（SSE）。
